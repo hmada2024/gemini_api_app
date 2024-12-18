@@ -1,62 +1,51 @@
-# gui_app.py ملف
 import tkinter as tk
 from tkinter import ttk
+from api import send_message
 
-# إعداد التطبيق الرئيسي
-root = tk.Tk()
-root.title("Gemini API Demo")
-root.geometry("500x400")
+class GeminiApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Gemini API Demo")
+        self.root.geometry("800x600")
 
-# إعداد الأنماط
-style = ttk.Style()
-style.theme_use("clam")  # اختيار الثيم
-style.configure("TFrame", background="#282C34")
-style.configure("TLabel", background="#282C34", foreground="#ABB2BF", font=("Helvetica", 12))
-style.configure("TButton", background="#61AFEF", foreground="#282C34", font=("Helvetica", 12))
-style.map("TButton", background=[("active", "#61AFEF")])
+        self.style = ttk.Style()
+        self.style.theme_use("clam")
+        self.style.configure("TFrame", background="#282C34")
+        self.style.configure("TLabel", background="#282C34", foreground="#ABB2BF", font=("Helvetica", 12))
+        self.style.configure("TButton", background="#61AFEF", foreground="#282C34", font=("Helvetica", 12))
+        self.style.map("TButton", background=[("active", "#61AFEF")])
 
-# إنشاء إطار رئيسي
-main_frame = ttk.Frame(root, padding="20")
-main_frame.pack(fill="both", expand=True)
+        self.main_frame = ttk.Frame(self.root, padding="20")
+        self.main_frame.pack(fill="both", expand=True)
 
-# تسمية الترحيب
-welcome_label = ttk.Label(main_frame, text="مرحبًا بك في تطبيق Gemini API", font=("Helvetica", 16, "bold"))
-welcome_label.pack(pady=10)
+        self.welcome_label = ttk.Label(self.main_frame, text="مرحبًا بك في تطبيق Gemini API", font=("Helvetica", 16, "bold"))
+        self.welcome_label.pack(pady=10)
 
-# إدخال المستخدم
-input_label = ttk.Label(main_frame, text="أدخل رسالتك:")
-input_label.pack(pady=5)
-user_input = tk.Entry(main_frame, width=50)
-user_input.pack(pady=5)
+        self.input_label = ttk.Label(self.main_frame, text="أدخل رسالتك:")
+        self.input_label.pack(pady=5)
+        self.user_input = tk.Text(self.main_frame, width=60, height=10, wrap="word")
+        self.user_input.pack(pady=5)
 
-# استجابة النموذج
-response_label = ttk.Label(main_frame, text="استجابة النموذج:")
-response_label.pack(pady=5)
-response_text = tk.Text(main_frame, width=50, height=10, wrap="word", state="disabled")
-response_text.pack(pady=5)
+        self.response_label = ttk.Label(self.main_frame, text="استجابة النموذج:")
+        self.response_label.pack(pady=5)
+        self.response_text = tk.Text(self.main_frame, width=60, height=10, wrap="word", state="disabled")
+        self.response_text.pack(pady=5)
 
-# دالة لإرسال الرسائل
-def send_message():
-    message = user_input.get()
-    if not message.strip():
-        response_text.configure(state="normal")
-        response_text.delete("1.0", tk.END)
-        response_text.insert(tk.END, "Error: Message cannot be empty.")
-        response_text.configure(state="disabled")
-        return
-    
-    # من المفترض هنا أن يتم استدعاء دالة send_message من API الخاص بك
-    # هذا مجرد مثال، يجب تعديل هذا الجزء ليتناسب مع كود API الخاص بك
-    response = "استجابة وهمية من النموذج"  # هذا مجرد مثال، ضع الكود الخاص بك هنا
-    
-    response_text.configure(state="normal")
-    response_text.delete("1.0", tk.END)
-    response_text.insert(tk.END, response)
-    response_text.configure(state="disabled")
+        self.send_button = ttk.Button(self.main_frame, text="إرسال", command=self.on_send_message)
+        self.send_button.pack(pady=10)
 
-# زر الإرسال
-send_button = ttk.Button(main_frame, text="إرسال", command=send_message)
-send_button.pack(pady=10)
+        self.root.mainloop()
 
-# بدء التطبيق
-root.mainloop()
+    def on_send_message(self):
+        message = self.user_input.get("1.0", tk.END).strip()
+        response = send_message(message)
+        self.response_text.configure(state="normal")
+        self.response_text.delete("1.0", tk.END)
+        self.response_text.insert(tk.END, response)
+        self.response_text.configure(state="disabled")
+        self.response_text.tag_add("green", "1.0", tk.END)
+        self.response_text.tag_config("green", foreground="green")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = GeminiApp(root)
