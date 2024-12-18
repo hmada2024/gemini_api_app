@@ -1,3 +1,4 @@
+# api.py ملف
 import os
 import google.generativeai as genai
 import tkinter as tk

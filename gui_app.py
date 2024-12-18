@@ -1,3 +1,4 @@
+# gui_app.py ملف
 import tkinter as tk
 from tkinter import ttk
 
