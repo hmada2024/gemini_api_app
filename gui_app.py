@@ -34,7 +34,7 @@ class GeminiApp:
         self.send_button = ttk.Button(self.main_frame, text="إرسال", command=self.on_send_message)
         self.send_button.pack(pady=10)
 
-        self.root.mainloop()
+        self.user_input.bind("<3>", lambda e: self.paste_content())
 
     def on_send_message(self):
         message = self.user_input.get("1.0", tk.END).strip()
@@ -46,6 +46,17 @@ class GeminiApp:
         self.response_text.tag_add("green", "1.0", tk.END)
         self.response_text.tag_config("green", foreground="green")
 
+    def paste_content(self):
+        try:
+            content = self.root.clipboard_get()
+            self.user_input.insert(tk.END, content)
+        except tk.TclError:
+            pass
+
+    def run(self):
+        self.root.mainloop()
+
 if __name__ == "__main__":
     root = tk.Tk()
     app = GeminiApp(root)
+    app.run()

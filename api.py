@@ -1,8 +1,6 @@
 # api.py ملف
 import os
 import google.generativeai as genai
-import tkinter as tk
-from tkinter import ttk
 
 # تكوين مكتبة genai باستخدام مفتاح API
 api_key = 'AIzaSyD81bpZqeJjOJWqlkY2e4lgrYuhzL8a8r4'
@@ -23,10 +21,12 @@ model = genai.GenerativeModel(
     generation_config=generation_config,
 )
 
-# Start chat session
-chat_session = model.start_chat(history=[])
+# بدء جلسة دردشة جديدة
+chat_session = model.start_chat(
+    history=[]
+)
 
-# Function to send messages and get responses
+# دالة لإرسال الرسائل والحصول على استجابة
 def send_message(message):
     if not message.strip():
         return "Error: Message cannot be empty."
